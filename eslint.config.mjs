@@ -12,6 +12,11 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Next.jsが自動生成する型ヘルパー(`next dev`/`next build`のたびに上書きされる)
+    "routes.d.ts",
+    "validator.ts",
+    "cache-life.d.ts",
+    "root-params.d.ts",
   ]),
 ]);
 

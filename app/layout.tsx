@@ -1,61 +1,31 @@
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import '@/styles/css/globals.css';
-import styles from './layout.module.scss';
-import { Suspense } from 'react';
-import { Metadata } from 'next';
-import SvgDefs from '@/components/SvgDefs';
-import { montserrat, zenKaku } from '@/libs/fonts';
+import type { Metadata } from 'next';
+import './globals.css';
+import { zenKaku } from '../lib/fonts';
+import Header from '../components/layout/Header';
+import Footer from '../components/layout/Footer';
+import { SITE_NAME } from '../lib/config';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.BASE_URL || 'https://inner-communication.vercel.app'),
+  metadataBase: new URL(process.env.BASE_URL || 'http://localhost:3000'),
   robots: 'noindex, nofollow',
   title: {
-    template: '%s | 子どもの成長記録一覧システム',
-    default: '子どもの成長記録一覧システム',
+    template: `%s | ${SITE_NAME}`,
+    default: SITE_NAME,
   },
-  description:'子どもの成長記録一覧システムです。',
-  icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon.ico',
-    apple: '/apple-touch-icon.png',
-  },
-  openGraph: {
-    title: {
-      template: '%s | 子どもの成長記録一覧システム',
-      default: '子どもの成長記録一覧システム',
-    },
-    description:'子どもの成長記録一覧システムです。',
-    type: 'website',
-    url: '/',
-    locale: 'ja_JP',
-    siteName: '子どもの成長記録一覧システム',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: '子どもの成長記録一覧システム',
-    description:'子どもの成長記録一覧システムです。',
-  },
-  alternates: {
-    canonical: '/',
-  },
+  description: '子どもの成長記録(身長・体重・予防接種・日々の記録)を管理するアプリです。',
 };
 
 type Props = {
   children: React.ReactNode;
 };
 
-export default async function RootLayout({ children }: Props) {
+export default function RootLayout({ children }: Props) {
   return (
-    <html lang="ja" className={`${montserrat.variable} ${zenKaku.variable}`} data-scroll-behavior="smooth">
-      <meta name="viewport" content="width=device-width,initial-scale=1" />
-      <body>
-        <Suspense fallback={<div className={styles.loading}>Loading...</div>}>
-          <SvgDefs />
-          <Header />
-          <main className={styles.main}>{children}</main>
-          <Footer />
-        </Suspense>
+    <html lang="ja" className={zenKaku.variable}>
+      <body className="flex min-h-screen flex-col bg-gray-50 text-gray-900">
+        <Header />
+        <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">{children}</main>
+        <Footer />
       </body>
     </html>
   );

@@ -1,0 +1,21 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: var(--font-zen-kaku), 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', sans-serif;
+
+  /* 子ども成長記録アプリのベースカラー(暖色系・やさしい印象) */
+  --color-brand-50: #fff7ed;
+  --color-brand-100: #ffedd5;
+  --color-brand-200: #fed7aa;
+  --color-brand-400: #fb923c;
+  --color-brand-500: #f97316;
+  --color-brand-600: #ea580c;
+  --color-brand-700: #c2410c;
+
+  --color-boy-500: #3b82f6;
+  --color-girl-500: #ec4899;
+}
+
+body {
+  font-family: var(--font-sans);
+}

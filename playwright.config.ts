@@ -23,11 +23,14 @@ export default defineConfig({
     command: 'npm run dev',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
-    timeout: 120000,  // ← 追加（デフォルト60秒は短い場合がある）
-    env: {            // ← 追加
-      MICROCMS_API_KEY: process.env.MICROCMS_API_KEY ?? '',
-      MICROCMS_SERVICE_DOMAIN: process.env.MICROCMS_SERVICE_DOMAIN ?? '',
-      DATABASE_URL: process.env.DATABASE_URL ?? '',
+    timeout: 120000,
+    env: {
+      // MICROCMS_API_KEY / MICROCMS_SERVICE_DOMAIN はモックせず、実際のmicroCMSサービスに接続する。
+      // ローカルは`.env`、CIはGitHub Secretsから渡される想定(`next dev`が自動で.envを読むため、
+      // ここでは上書きしない)
+      // Basic認証を無効化してPlaywrightからの認証無しアクセスを通す
+      BASIC_AUTH_USER: '',
+      BASIC_AUTH_PASSWORD: '',
     },
   },
 });
