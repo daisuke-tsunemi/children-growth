@@ -29,8 +29,8 @@ function tokyoDateParts(date: Date): DateParts {
 }
 
 /**
- * 誕生日から基準日時点の月齢(生後何か月か)を返す。日またぎの端数は切り捨てる
- * (例: 生後1か月と20日 → 1)。
+ * 誕生日から基準日時点の月齢(生後何ヶ月か)を返す。日またぎの端数は切り捨てる
+ * (例: 生後1ヶ月と20日 → 1)。
  */
 export function calculateAgeInMonths(birthday: string, asOf: Date = new Date()): number {
   const birth = parseDateOnly(birthday);
@@ -53,7 +53,7 @@ export function calculateAgeInYears(birthday: string, asOf: Date = new Date()): 
 }
 
 /**
- * 年齢を「◯歳◯か月」の表示用文字列にする。1歳未満は「◯か月」のみ。
+ * 年齢を「◯歳◯ヶ月」の表示用文字列にする。1歳未満は「◯ヶ月」のみ。
  */
 export function formatAge(birthday: string, asOf: Date = new Date()): string {
   const totalMonths = calculateAgeInMonths(birthday, asOf);
@@ -61,10 +61,26 @@ export function formatAge(birthday: string, asOf: Date = new Date()): string {
   const months = totalMonths % 12;
 
   if (years === 0) {
-    return `${months}か月`;
+    return `${months}ヶ月`;
   }
   if (months === 0) {
     return `${years}歳`;
   }
-  return `${years}歳${months}か月`;
+  return `${years}歳${months}ヶ月`;
+}
+
+/**
+ * 月齢(整数)を「◯歳◯ヶ月」の表示用文字列にする。1歳未満は「◯ヶ月」のみ。
+ */
+export function formatMonthsAsAge(totalMonths: number): string {
+  const years = Math.floor(totalMonths / 12);
+  const months = totalMonths % 12;
+
+  if (years === 0) {
+    return `${months}ヶ月`;
+  }
+  if (months === 0) {
+    return `${years}歳`;
+  }
+  return `${years}歳${months}ヶ月`;
 }

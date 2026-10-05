@@ -5,6 +5,8 @@ import { getDaily } from '../../lib/microcms';
 import { DAILY_CATEGORIES } from '../../constants/daily';
 import { dailyCategorySchema } from '../../types';
 import DailyTimeline from '../../components/timeline/DailyTimeline';
+import BlockCastle from '@/components/illustrations/BlockCastle';
+import styles from "../pages.module.scss";
 
 export const metadata: Metadata = { title: '日々の記録' };
 
@@ -31,9 +33,13 @@ export default async function DailyPage({ searchParams }: Props) {
 
   return (
     <div className="space-y-6">
-      <h1 className="font-heading text-[32px] leading-[1.2] text-gray-800">日々の記録</h1>
-
-      <div className="flex flex-wrap gap-2 text-sm">
+      <div className={styles.castle}>
+        <BlockCastle />
+      </div>
+      <div className={`${styles.heading}`}>
+        <h1 className="font-heading text-[32px] leading-[1.2] text-primary-600">日々の記録</h1>
+      </div>
+      <div className={`${styles.content} flex flex-wrap gap-2 text-sm`}>
         <Link
           href="/daily"
           className={`rounded-full px-3.5 py-1.5 font-semibold ${!category ? 'bg-primary-500 text-white' : 'border border-primary-500/40 bg-primary-500/20 text-primary-600'}`}

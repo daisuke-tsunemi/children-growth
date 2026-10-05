@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import {
   ComposedChart,
   Area,
@@ -22,6 +23,7 @@ type Props = {
   birthday: Child['birthday'];
   metric: Metric;
   standards: GrowthStandardPoint[];
+  showTabs?: boolean;
 };
 
 const METRIC_LABEL: Record<Metric, { label: string; unit: string }> = {
@@ -37,7 +39,8 @@ type ChartPoint = {
   p97?: number;
 };
 
-export default function GrowthChart({ measurements, birthday, metric, standards }: Props) {
+export default function GrowthChart({ measurements, birthday, metric: initialMetric, standards, showTabs = false }: Props) {
+  const [metric, setMetric] = useState(initialMetric);
   const { label, unit } = METRIC_LABEL[metric];
 
   const measuredPoints: ChartPoint[] = measurements
@@ -63,67 +66,92 @@ export default function GrowthChart({ measurements, birthday, metric, standards 
   }
   const data = [...byAge.values()].sort((a, b) => a.ageMonths - b.ageMonths);
 
-  if (measuredPoints.length === 0) {
-    return <p className="text-sm text-gray-500">まだ記録がありません。</p>;
-  }
-
   return (
-    <div className="h-80 w-full rounded-lg border-2 border-dashed border-gray-200 bg-white p-4">
-      <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart data={data} margin={{ top: 8, right: 16, bottom: 8, left: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-          <XAxis
-            dataKey="ageMonths"
-            type="number"
-            domain={['dataMin', 'dataMax']}
-            label={{ value: '月齢', position: 'insideBottomRight', offset: -4 }}
-            tickFormatter={(value: number) => `${value}`}
-          />
-          <YAxis
-            label={{ value: `${label}(${unit})`, angle: -90, position: 'insideLeft' }}
-            domain={['auto', 'auto']}
-          />
-          <Tooltip
-            formatter={(value, name) => [`${value}${unit}`, name]}
-            labelFormatter={(value) => `生後${value}か月`}
-          />
-          <Legend />
-          {standards.length > 0 && (
-            <Area
-              dataKey="p97"
-              name="成長曲線"
-              stroke="none"
-              fill="#fbbf24"
-              fillOpacity={0.2}
-              connectNulls
-              isAnimationActive={false}
-            />
-          )}
-          {standards.length > 0 && (
-            <Area dataKey="p3" stroke="none" fill="#ffffff" connectNulls isAnimationActive={false} legendType="none" />
-          )}
-          {standards.length > 0 && (
-            <Line
-              dataKey="p50"
-              name="中央値"
-              stroke="#22c55e"
-              strokeDasharray="4 4"
-              dot={false}
-              connectNulls
-              isAnimationActive={false}
-            />
-          )}
-          <Line
-            dataKey="value"
-            name={label}
-            stroke="#3b82f6"
-            strokeWidth={2}
-            dot={{ r: 3 }}
-            connectNulls
-            isAnimationActive={false}
-          />
-        </ComposedChart>
-      </ResponsiveContainer>
+    <div className="w-full rounded-lg border-2 border-dashed border-gray-200 bg-white p-4">
+      {showTabs && (
+        <div className="mb-3 flex gap-2">
+          {(Object.keys(METRIC_LABEL) as Metric[]).map((m) => (
+            <button
+              key={m}
+              type="button"
+              onClick={() => setMetric(m)}
+              className={`rounded-full px-4 py-1 text-sm font-semibold transition-colors ${
+                metric === m ? 'bg-primary-500 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+              }`}
+            >
+              {METRIC_LABEL[m].label}
+            </button>
+          ))}
+        </div>
+      )}
+      {measuredPoints.length === 0 ? (
+        <p className="text-sm text-gray-500">まだ記録がありません。</p>
+      ) : (
+        <div className="h-72 w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <ComposedChart data={data} margin={{ top: 8, right: 16, bottom: 8, left: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+              <XAxis
+                dataKey="ageMonths"
+                type="number"
+                domain={['dataMin', 'dataMax']}
+                label={{ value: '月齢', position: 'insideBottomRight', offset: -4 }}
+                tickFormatter={(value: number) => `${value}`}
+              />
+              <YAxis
+                label={{ value: `${label}(${unit})`, angle: -90, position: 'insideLeft' }}
+                domain={[30, 'dataMax']}
+              />
+              <Tooltip
+                formatter={(value, name) => [`${value}${unit}`, name]}
+                labelFormatter={(value) => `生後${value}か月`}
+              />
+              <Legend />
+              {standards.length > 0 && (
+                <Area
+                  dataKey="p97"
+                  name="成長曲線"
+                  stroke="none"
+                  fill="#fbbf24"
+                  fillOpacity={0.2}
+                  connectNulls
+                  isAnimationActive={false}
+                />
+              )}
+              {standards.length > 0 && (
+                <Area
+                  dataKey="p3"
+                  stroke="none"
+                  fill="#ffffff"
+                  connectNulls
+                  isAnimationActive={false}
+                  legendType="none"
+                />
+              )}
+              {standards.length > 0 && (
+                <Line
+                  dataKey="p50"
+                  name="中央値"
+                  stroke="#22c55e"
+                  strokeDasharray="4 4"
+                  dot={false}
+                  connectNulls
+                  isAnimationActive={false}
+                />
+              )}
+              <Line
+                dataKey="value"
+                name={label}
+                stroke="#3b82f6"
+                strokeWidth={2}
+                dot={{ r: 3 }}
+                connectNulls
+                isAnimationActive={false}
+              />
+            </ComposedChart>
+          </ResponsiveContainer>
+        </div>
+      )}
     </div>
   );
 }

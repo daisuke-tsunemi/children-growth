@@ -7,6 +7,7 @@ import { getGrowthStandards } from '../constants/growth-standards';
 import { formatAge } from '../lib/age';
 import GrowthChart from '../components/charts/GrowthChart';
 import BlockCastle from '../components/illustrations/BlockCastle';
+import styles from "./home.module.scss";
 
 export default async function Home() {
   const { children, selected } = await getSelectedChild();
@@ -33,12 +34,12 @@ export default async function Home() {
   const standards = getGrowthStandards(selected.gender);
 
   return (
-    <div className="space-y-8">
-      <section className="grid gap-8 overflow-hidden rounded-lg border-2 border-dashed border-primary-500/30 bg-gradient-to-br from-primary-500/10 to-surface p-6 sm:p-8 lg:grid-cols-2 lg:items-center">
+    <div className="space-y-4">
+      <section className="grid gap-8 overflow-hidden rounded-lg border-2 border-dashed border-primary-500/30 bg-gradient-to-br from-primary-500/10 to-surface p-4 sm:p-6 lg:grid-cols-2 lg:items-center">
         <div className="space-y-5">
           <p className="font-semibold text-primary-600">子ども成長記録</p>
           <h1 className="font-heading text-4xl leading-relaxed text-gray-800 sm:text-5xl">
-            子どもの成長を、
+            子どもの成長を
             <br />
             積み重ねよう
           </h1>
@@ -71,17 +72,22 @@ export default async function Home() {
               <p className="ml-auto text-sm font-semibold text-gray-400">他{children.length - 1}人登録中</p>
             )}
           </div>
-          <GrowthChart measurements={measurements} birthday={selected.birthday} metric="height" standards={standards} />
+          <GrowthChart
+            measurements={measurements}
+            birthday={selected.birthday}
+            metric="height"
+            standards={standards}
+            showTabs
+          />
         </div>
       </section>
-
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className={`${styles.linkWrapper} grid gap-4 lg:grid-cols-3`}>
         <Link
           href="/growth"
-          className="block rounded-lg border-2 border-dashed border-gray-200 bg-white p-5 shadow-sm hover:border-primary-500 flex items-center justify-between"
+          className="block rounded-lg border-2 border-dashed border-primary-500 bg-white p-5 shadow-sm hover:border-primary-600 flex items-center justify-between hover:text-primary-600"
         >
           <div className="flex-auto">
-            <p className="text-sm font-medium text-gray-500">からだの成長</p>
+            <p className="text-sm font-medium">からだの成長</p>
             {latestMeasurement ? (
               <div className="flex gap-1 items-end text-gray-800">
                 <p className="font-heading">
@@ -113,10 +119,10 @@ export default async function Home() {
 
         <Link
           href="/vaccinations"
-          className="block rounded-lg border-2 border-dashed border-gray-200 bg-white p-5 shadow-sm hover:border-primary-500 flex items-center justify-between"
+          className="block rounded-lg border-2 border-dashed border-primary-500 bg-white p-5 shadow-sm hover:border-primary-600 flex items-center justify-between hover:text-primary-600"
         >
           <div className="flex-auto">
-            <p className="text-sm font-medium text-gray-500">予防接種</p>
+            <p className="text-sm font-medium">予防接種</p>
             <p className={`font-heading mt-2 text-lg ${overdueCount > 0 ? 'text-error-500' : 'text-gray-800'}`}>
               {overdueCount > 0 ? `予定超過 ${overdueCount} 件` : '予定超過なし'}
             </p>
@@ -126,10 +132,10 @@ export default async function Home() {
 
         <Link
           href="/daily"
-          className="block rounded-lg border-2 border-dashed border-gray-200 bg-white p-5 shadow-sm hover:border-primary-500 flex items-center justify-between"
+          className="block rounded-lg border-2 border-dashed border-primary-500 bg-white p-5 shadow-sm hover:border-primary-600 flex items-center justify-between hover:text-primary-600"
         >
           <div className="flex-auto">
-            <p className="text-sm font-medium text-gray-500">日々の記録</p>
+            <p className="text-sm font-medium">日々の記録</p>
             {latestDaily ? (
               <>
                 <p className="mt-2 line-clamp-2 text-sm text-gray-800">{latestDaily.note}</p>

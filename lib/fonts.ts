@@ -1,13 +1,6 @@
-import { Patrick_Hand, Nunito } from 'next/font/google';
+import { Nunito } from 'next/font/google';
 import localFont from 'next/font/local';
 
-export const patrickHand = Patrick_Hand({
-  subsets: ['latin'],
-  weight: '400',
-  variable: '--font-patrick-hand',
-  display: 'swap',
-  preload: false,
-});
 
 export const nunito = Nunito({
   subsets: ['latin'],

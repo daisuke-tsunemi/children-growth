@@ -1,0 +1,11 @@
+@use "@/styles/foundation/variables" as *;
+.linkWrapper{
+    >a{
+        @include respond-lg{
+            transition: all 0.2s;
+            &:hover{
+                background-color: #e7fcff;
+            }
+        }
+    }
+}

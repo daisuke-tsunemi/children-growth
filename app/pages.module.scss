@@ -1,0 +1,12 @@
+.heading, .content{
+    position:relative;
+    z-index: 1;
+}
+.castle{
+    position: absolute;
+    top: 12.5vh;
+    left: 5vw;
+    opacity: .3;
+    z-index: 0;
+    transform: rotate(-3deg) scale(1.5);
+}

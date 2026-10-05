@@ -1,4 +1,5 @@
 import type { VaccinationRow, VaccinationStatus } from '../../lib/vaccinations';
+import { formatMonthsAsAge } from '../../lib/age';
 
 type Props = {
   rows: VaccinationRow[];
@@ -48,7 +49,7 @@ export default function VaccinationsTable({ rows }: Props) {
                 <td className="px-3 py-2 whitespace-nowrap">{row.doseCount}回目</td>
                 <td className="px-3 py-2 whitespace-nowrap text-gray-500">
                   {row.fromMonths !== null && row.toMonths !== null
-                    ? `生後${row.fromMonths}〜${row.toMonths}か月`
+                    ? `${formatMonthsAsAge(row.fromMonths)}〜${formatMonthsAsAge(row.toMonths)}`
                     : '—'}
                 </td>
                 <td className="px-3 py-2 whitespace-nowrap">{row.record?.vaccinatedAt?.slice(0, 10) ?? '—'}</td>

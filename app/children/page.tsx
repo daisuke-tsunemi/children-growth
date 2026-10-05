@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import { getChildren } from '../../lib/microcms';
 import { formatAge } from '../../lib/age';
+import BlockCastle from '@/components/illustrations/BlockCastle';
+import styles from "../pages.module.scss";
 
 export const metadata: Metadata = { title: '子ども' };
 
@@ -23,44 +25,51 @@ export default async function ChildrenPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <h1 className="font-heading text-[32px] leading-[1.2] text-gray-800">子ども</h1>
-      <ul className="grid gap-4 sm:grid-cols-2">
-        {children.map((child) => (
-          <li
-            key={child.id}
-            className="flex gap-4 rounded-lg border-2 border-dashed border-gray-200 bg-white p-5 shadow-sm"
-          >
-            <div className="h-16 w-16 shrink-0 overflow-hidden rounded-full bg-gray-100">
-              {child.photo && (
-                <Image
-                  src={child.photo.url}
-                  alt={child.name}
-                  width={64}
-                  height={64}
-                  className="h-full w-full object-cover"
-                />
-              )}
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="flex flex-wrap items-center gap-2">
-                <p className="font-heading text-lg text-gray-800">{child.name}</p>
-                {child.gender && (
-                  <span
-                    className={`rounded-full px-2.5 py-0.5 text-sm font-semibold ${GENDER_BADGE_CLASS[child.gender] ?? GENDER_BADGE_CLASS['未設定']}`}
-                  >
-                    {child.gender}
-                  </span>
+    <div className="space-y-6 lg:max-w-2/3 mx-auto">
+      <div className={styles.castle}>
+        <BlockCastle />
+      </div>
+      <div className={styles.heading}>
+        <h1 className="font-heading text-[32px] leading-[1.2] text-primary-600">登録済みの子ども</h1>
+      </div>
+      <div className={styles.content}>
+        <ul className="grid gap-4">
+          {children.map((child) => (
+            <li
+              key={child.id}
+              className="flex gap-4 rounded-lg border-2 border-dashed border-gray-200 bg-white p-5 shadow-sm"
+            >
+              <div className="h-16 w-16 shrink-0 overflow-hidden rounded-full bg-gray-100">
+                {child.photo && (
+                  <Image
+                    src={child.photo.url}
+                    alt={child.name}
+                    width={64}
+                    height={64}
+                    className="h-full w-full object-cover"
+                  />
                 )}
               </div>
-              <p className="text-sm text-gray-500">
-                {child.birthday} 生まれ({formatAge(child.birthday)})
-              </p>
-              {child.memo && <p className="mt-2 text-sm text-gray-600">{child.memo}</p>}
-            </div>
-          </li>
-        ))}
-      </ul>
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="font-heading text-lg text-gray-800">{child.name}</p>
+                  {child.gender && (
+                    <span
+                      className={`rounded-full px-2.5 py-0.5 text-sm font-semibold ${GENDER_BADGE_CLASS[child.gender] ?? GENDER_BADGE_CLASS['未設定']}`}
+                    >
+                      {child.gender}
+                    </span>
+                  )}
+                </div>
+                <p className="text-sm text-gray-500">
+                  {child.birthday} 生まれ({formatAge(child.birthday)})
+                </p>
+                {child.memo && <p className="mt-2 text-sm text-gray-600">{child.memo}</p>}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
