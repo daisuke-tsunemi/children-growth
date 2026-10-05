@@ -17,7 +17,7 @@ export default async function DailyPage({ searchParams }: Props) {
 
   if (!selected) {
     return (
-      <div className="rounded-lg border border-dashed border-gray-300 bg-white p-8 text-center text-gray-500">
+      <div className="rounded-lg border-2 border-dashed border-gray-300 bg-white p-8 text-center text-gray-500">
         まだ子どもが登録されていません。microCMSの管理画面から「子どもプロフィール」を登録してください。
       </div>
     );
@@ -31,12 +31,12 @@ export default async function DailyPage({ searchParams }: Props) {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-bold text-gray-800">日々の記録</h1>
+      <h1 className="font-heading text-[32px] leading-[1.2] text-gray-800">日々の記録</h1>
 
       <div className="flex flex-wrap gap-2 text-sm">
         <Link
           href="/daily"
-          className={`rounded-full px-3 py-1 ${!category ? 'bg-brand-600 text-white' : 'bg-white text-gray-600 border border-gray-200'}`}
+          className={`rounded-full px-3.5 py-1.5 font-semibold ${!category ? 'bg-primary-500 text-white' : 'border border-primary-500/40 bg-primary-500/20 text-primary-600'}`}
         >
           すべて
         </Link>
@@ -44,7 +44,7 @@ export default async function DailyPage({ searchParams }: Props) {
           <Link
             key={item}
             href={`/daily?category=${encodeURIComponent(item)}`}
-            className={`rounded-full px-3 py-1 ${category === item ? 'bg-brand-600 text-white' : 'bg-white text-gray-600 border border-gray-200'}`}
+            className={`rounded-full px-3.5 py-1.5 font-semibold ${category === item ? 'bg-primary-500 text-white' : 'border border-primary-500/40 bg-primary-500/20 text-primary-600'}`}
           >
             {item}
           </Link>

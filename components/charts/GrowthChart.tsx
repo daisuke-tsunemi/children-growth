@@ -68,7 +68,7 @@ export default function GrowthChart({ measurements, birthday, metric, standards 
   }
 
   return (
-    <div className="h-80 w-full rounded-lg border border-gray-100 bg-white p-4">
+    <div className="h-80 w-full rounded-lg border-2 border-dashed border-gray-200 bg-white p-4">
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart data={data} margin={{ top: 8, right: 16, bottom: 8, left: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
@@ -91,10 +91,10 @@ export default function GrowthChart({ measurements, birthday, metric, standards 
           {standards.length > 0 && (
             <Area
               dataKey="p97"
-              name="成長曲線(3〜97パーセンタイル)"
+              name="成長曲線"
               stroke="none"
-              fill="#fed7aa"
-              fillOpacity={0.5}
+              fill="#fbbf24"
+              fillOpacity={0.2}
               connectNulls
               isAnimationActive={false}
             />
@@ -105,8 +105,8 @@ export default function GrowthChart({ measurements, birthday, metric, standards 
           {standards.length > 0 && (
             <Line
               dataKey="p50"
-              name="中央値(50パーセンタイル)"
-              stroke="#fb923c"
+              name="中央値"
+              stroke="#22c55e"
               strokeDasharray="4 4"
               dot={false}
               connectNulls
@@ -116,7 +116,7 @@ export default function GrowthChart({ measurements, birthday, metric, standards 
           <Line
             dataKey="value"
             name={label}
-            stroke="#ea580c"
+            stroke="#3b82f6"
             strokeWidth={2}
             dot={{ r: 3 }}
             connectNulls

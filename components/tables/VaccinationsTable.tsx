@@ -5,9 +5,9 @@ type Props = {
 };
 
 const STATUS_LABEL: Record<VaccinationStatus, { label: string; className: string }> = {
-  completed: { label: '接種済', className: 'bg-brand-50 text-brand-700' },
-  overdue: { label: '予定超過', className: 'bg-red-50 text-red-600' },
-  upcoming: { label: '接種時期', className: 'bg-boy-500/10 text-boy-500' },
+  completed: { label: '接種済', className: 'bg-[#dcfce7] text-[#166534]' },
+  overdue: { label: '予定超過', className: 'bg-[#fee2e2] text-[#991b1b]' },
+  upcoming: { label: '接種時期', className: 'bg-[#fef9c3] text-[#854d0e]' },
   not_yet_due: { label: 'まだ先', className: 'bg-gray-100 text-gray-500' },
 };
 
@@ -22,25 +22,25 @@ export default function VaccinationsTable({ rows }: Props) {
   const sorted = [...rows].sort((a, b) => (a.fromMonths ?? 0) - (b.fromMonths ?? 0));
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-100 bg-white">
+    <div className="overflow-x-auto rounded-lg border-2 border-dashed border-gray-200 bg-white">
       <table className="w-full min-w-[640px] text-sm">
-        <thead className="border-b border-gray-100 bg-gray-50 text-left text-gray-500">
+        <thead className="border-b-2 border-dashed border-gray-200 bg-surface text-left text-gray-500">
           <tr>
-            <th className="px-3 py-2 font-medium">状態</th>
-            <th className="px-3 py-2 font-medium">予防接種の種類</th>
-            <th className="px-3 py-2 font-medium">回数</th>
-            <th className="px-3 py-2 font-medium">標準的な時期</th>
-            <th className="px-3 py-2 font-medium">接種日</th>
-            <th className="px-3 py-2 font-medium">医療機関</th>
+            <th className="px-3 py-2 font-semibold">状態</th>
+            <th className="px-3 py-2 font-semibold">予防接種の種類</th>
+            <th className="px-3 py-2 font-semibold">回数</th>
+            <th className="px-3 py-2 font-semibold">標準的な時期</th>
+            <th className="px-3 py-2 font-semibold">接種日</th>
+            <th className="px-3 py-2 font-semibold">医療機関</th>
           </tr>
         </thead>
         <tbody>
           {sorted.map((row) => {
             const status = STATUS_LABEL[row.status];
             return (
-              <tr key={`${row.vaccine}:${row.doseCount}`} className="border-b border-gray-50 last:border-0">
+              <tr key={`${row.vaccine}:${row.doseCount}`} className="border-b border-dashed border-gray-100 last:border-0">
                 <td className="px-3 py-2">
-                  <span className={`rounded-full px-2 py-0.5 text-xs font-medium whitespace-nowrap ${status.className}`}>
+                  <span className={`rounded-full px-2.5 py-0.5 text-sm font-semibold whitespace-nowrap ${status.className}`}>
                     {status.label}
                   </span>
                 </td>

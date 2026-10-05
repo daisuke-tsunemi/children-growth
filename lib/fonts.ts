@@ -1,11 +1,29 @@
-import { Zen_Kaku_Gothic_New } from 'next/font/google';
+import { Patrick_Hand, Nunito } from 'next/font/google';
+import localFont from 'next/font/local';
 
-// 全ページで使用するフォントを一元管理する(重複読み込みを防ぐ)
-export const zenKaku = Zen_Kaku_Gothic_New({
+export const patrickHand = Patrick_Hand({
   subsets: ['latin'],
-  weight: ['400', '500', '700'],
-  variable: '--font-zen-kaku',
+  weight: '400',
+  variable: '--font-patrick-hand',
   display: 'swap',
   preload: false,
-  adjustFontFallback: true,
+});
+
+export const nunito = Nunito({
+  subsets: ['latin'],
+  weight: ['400', '600', '700', '800'],
+  variable: '--font-nunito',
+  display: 'swap',
+  preload: false,
+});
+
+export const zenMaruGothic = localFont({
+  src: [
+    { path: '../app/fonts/ZenMaruGothic-Regular.woff2', weight: '400', style: 'normal' },
+    { path: '../app/fonts/ZenMaruGothic-Medium.woff2', weight: '500', style: 'normal' },
+    { path: '../app/fonts/ZenMaruGothic-Bold.woff2', weight: '700', style: 'normal' },
+  ],
+  variable: '--font-zen-maru',
+  display: 'swap',
+  preload: false,
 });

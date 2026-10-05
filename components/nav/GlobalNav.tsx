@@ -1,7 +1,6 @@
 import Link from 'next/link';
 
 const NAV_ITEMS = [
-  { href: '/', label: 'ホーム' },
   { href: '/children', label: '子ども' },
   { href: '/growth', label: 'からだの成長' },
   { href: '/vaccinations', label: '予防接種' },
@@ -10,9 +9,9 @@ const NAV_ITEMS = [
 
 export default function GlobalNav() {
   return (
-    <nav className="flex flex-wrap gap-x-4 gap-y-1 text-sm font-medium text-gray-600">
+    <nav className="flex flex-wrap gap-x-4 gap-y-1 text-sm font-semibold text-gray-600">
       {NAV_ITEMS.map((item) => (
-        <Link key={item.href} href={item.href} className="hover:text-brand-600">
+        <Link key={item.href} href={item.href} className="hover:text-primary-600">
           {item.label}
         </Link>
       ))}

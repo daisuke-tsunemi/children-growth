@@ -10,10 +10,10 @@ export default async function Header() {
   const currentPath = headerStore.get('x-pathname') ?? '/';
 
   return (
-    <header className="border-b border-brand-100 bg-white">
-      <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-4 py-4">
+    <header className="border-b-2 border-dashed border-primary-500/30 bg-white">
+      <div className="mx-auto flex xl:container flex-wrap items-center justify-between gap-4 px-4 py-2">
         <div className="flex flex-wrap items-center gap-6">
-          <Link href="/" className="text-lg font-bold text-brand-700">
+          <Link href="/" className="font-heading text-xl text-primary-600">
             {SITE_NAME}
           </Link>
           <GlobalNav />

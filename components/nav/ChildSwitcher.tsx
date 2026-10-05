@@ -30,7 +30,7 @@ export default function ChildSwitcher({ childList, selectedChildId, currentPath 
         // eslint-disable-next-line @next/next/no-location-assign-relative-destination
         window.location.href = `/api/select-child?${params.toString()}`;
       }}
-      className="rounded-md border border-brand-200 bg-white px-3 py-1.5 text-sm font-medium text-brand-700 shadow-sm"
+      className="rounded-md border-2 border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-primary-600 hover:border-gray-400 focus:border-primary-500 focus:ring-[3px] focus:ring-primary-500/25 focus:outline-none"
     >
       {childList.map((child) => (
         <option key={child.id} value={child.id}>
