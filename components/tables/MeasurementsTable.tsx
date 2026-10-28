@@ -6,15 +6,12 @@ type Props = {
 
 /**
  * からだの成長記録の一覧表。`GrowthChart`と同じデータを表形式で見られるようにする
- * (チャートのツールチップに値を閉じ込めない)。
+ * (チャートのツールチップに値を閉じ込めない)。並び順・ページ分割は呼び出し側で済ませる。
  */
 export default function MeasurementsTable({ measurements }: Props) {
   if (measurements.length === 0) {
     return <p className="text-sm text-gray-500">まだ記録がありません。</p>;
   }
-
-  // チャートは測定日の昇順、一覧は新しい順のほうが見やすいため表示直前に反転する
-  const rows = [...measurements].reverse();
 
   return (
     <div className="overflow-x-auto rounded-lg border-2 border-dashed border-gray-200 bg-white">
@@ -29,7 +26,7 @@ export default function MeasurementsTable({ measurements }: Props) {
           </tr>
         </thead>
         <tbody>
-          {rows.map((measurement) => (
+          {measurements.map((measurement) => (
             <tr key={measurement.id} className="border-b border-dashed border-gray-100 last:border-0">
               <td className="px-3 py-2 whitespace-nowrap">{measurement.measuredAt.slice(0, 10)}</td>
               <td className="px-3 py-2">{measurement.height ?? '—'}</td>

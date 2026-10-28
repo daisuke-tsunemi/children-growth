@@ -4,13 +4,20 @@ import { getMeasurements } from '../../lib/microcms';
 import { getGrowthStandards } from '../../constants/growth-standards';
 import { formatAge } from '../../lib/age';
 import GrowthChart from '../../components/charts/GrowthChart';
+import Pagination from '../../components/nav/Pagination';
 import MeasurementsTable from '../../components/tables/MeasurementsTable';
 import BlockCastle from '@/components/illustrations/BlockCastle';
 import styles from "../pages.module.scss";
 
 export const metadata: Metadata = { title: 'からだの成長' };
 
-export default async function GrowthPage() {
+const TABLE_PAGE_SIZE = 20;
+
+type Props = {
+  searchParams: Promise<{ page?: string }>;
+};
+
+export default async function GrowthPage({ searchParams }: Props) {
   const { children, selected } = await getSelectedChild();
 
   if (!selected) {
@@ -22,6 +29,12 @@ export default async function GrowthPage() {
   }
 
   const measurements = await getMeasurements(selected.id);
+  const totalPages = Math.max(1, Math.ceil(measurements.length / TABLE_PAGE_SIZE));
+  const { page: rawPage } = await searchParams;
+  const page = Math.min(totalPages, Math.max(1, Number.parseInt(rawPage ?? '1', 10) || 1));
+  // 一覧は新しい順。チャートは全件を使うため、ページングは表にだけ適用する
+  const newestFirst = [...measurements].reverse();
+  const tableRows = newestFirst.slice((page - 1) * TABLE_PAGE_SIZE, page * TABLE_PAGE_SIZE);
   const standards = getGrowthStandards(selected.gender);
 
   return (
@@ -53,9 +66,10 @@ export default async function GrowthPage() {
           />
         </section>
 
-        <section className="space-y-3">
+        <section className="space-y-3 mt-4">
           <h2 className="font-heading text-xl leading-[1.35] text-gray-700">記録一覧</h2>
-          <MeasurementsTable measurements={measurements} />
+          <MeasurementsTable measurements={tableRows} />
+          <Pagination basePath="/growth" page={page} totalPages={totalPages} />
         </section>
       </div>
     </div>

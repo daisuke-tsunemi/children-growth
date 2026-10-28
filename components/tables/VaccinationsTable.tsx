@@ -28,11 +28,9 @@ export default function VaccinationsTable({ rows }: Props) {
         <thead className="border-b-2 border-dashed border-gray-200 bg-surface text-left text-gray-500">
           <tr>
             <th className="px-3 py-2 font-semibold">状態</th>
-            <th className="px-3 py-2 font-semibold">予防接種の種類</th>
-            <th className="px-3 py-2 font-semibold">回数</th>
-            <th className="px-3 py-2 font-semibold">標準的な時期</th>
-            <th className="px-3 py-2 font-semibold">接種日</th>
-            <th className="px-3 py-2 font-semibold">医療機関</th>
+            <th className="px-3 py-2 font-semibold w-32">回数 / 接種日</th>
+            <th className="px-3 py-2 font-semibold w-32">医療機関</th>
+            <th className="px-3 py-2 font-semibold">種類 / 標準的な時期</th>
           </tr>
         </thead>
         <tbody>
@@ -45,15 +43,13 @@ export default function VaccinationsTable({ rows }: Props) {
                     {status.label}
                   </span>
                 </td>
-                <td className="px-3 py-2">{row.vaccine}</td>
-                <td className="px-3 py-2 whitespace-nowrap">{row.doseCount}回目</td>
-                <td className="px-3 py-2 whitespace-nowrap text-gray-500">
+                <td className="px-3 py-2 whitespace-nowrap">{row.doseCount}回目 <br /> {row.record?.vaccinatedAt?.slice(0, 10) ?? '—'}</td>
+                <td className="px-3 py-2 text-gray-500">{row.record?.clinic ?? ''}</td>
+                <td className="px-3 py-2">{row.vaccine} <br />
                   {row.fromMonths !== null && row.toMonths !== null
                     ? `${formatMonthsAsAge(row.fromMonths)}〜${formatMonthsAsAge(row.toMonths)}`
                     : '—'}
                 </td>
-                <td className="px-3 py-2 whitespace-nowrap">{row.record?.vaccinatedAt?.slice(0, 10) ?? '—'}</td>
-                <td className="px-3 py-2 text-gray-500">{row.record?.clinic ?? ''}</td>
               </tr>
             );
           })}

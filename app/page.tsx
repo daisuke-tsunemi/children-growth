@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { getSelectedChild } from '../lib/selected-child';
-import { getMeasurements, getVaccinations, getDaily } from '../lib/microcms';
+import { getMeasurements, getVaccinations, getDailyPage } from '../lib/microcms';
 import { buildVaccinationSchedule } from '../lib/vaccinations';
 import { getGrowthStandards } from '../constants/growth-standards';
 import { formatAge } from '../lib/age';
@@ -23,11 +23,11 @@ export default async function Home() {
   const [measurements, vaccinations, daily] = await Promise.all([
     getMeasurements(selected.id),
     getVaccinations(selected.id),
-    getDaily(selected.id),
+    getDailyPage(selected.id, 1),
   ]);
 
   const latestMeasurement = measurements.at(-1) ?? null;
-  const latestDaily = daily[0] ?? null;
+  const latestDaily = daily.records[0] ?? null;
   const overdueCount = buildVaccinationSchedule(selected.birthday, vaccinations).filter(
     (row) => row.status === 'overdue',
   ).length;
@@ -35,7 +35,7 @@ export default async function Home() {
 
   return (
     <div className="space-y-4">
-      <section className="grid gap-8 overflow-hidden rounded-lg border-2 border-dashed border-primary-500/30 bg-gradient-to-br from-primary-500/10 to-surface p-4 sm:p-6 lg:grid-cols-2 lg:items-center">
+      <section className="grid gap-8 overflow-hidden rounded-lg border-2 border-dashed border-primary-500/30 bg-gradient-to-br from-primary-500/10 to-surface p-4 sm:p-6 md:grid-cols-2 lg:items-center">
         <div className="space-y-5">
           <p className="font-semibold text-primary-600">子ども成長記録</p>
           <h1 className="font-heading text-4xl leading-relaxed text-gray-800 sm:text-5xl">
@@ -84,7 +84,7 @@ export default async function Home() {
       <div className={`${styles.linkWrapper} grid gap-4 lg:grid-cols-3`}>
         <Link
           href="/growth"
-          className="block rounded-lg border-2 border-dashed border-primary-500 bg-white p-5 shadow-sm hover:border-primary-600 flex items-center justify-between hover:text-primary-600"
+          className="rounded-lg border-2 border-dashed border-primary-500 bg-white p-5 shadow-sm hover:border-primary-600 flex items-center justify-between hover:text-primary-600"
         >
           <div className="flex-auto">
             <p className="text-sm font-medium">からだの成長</p>
@@ -119,7 +119,7 @@ export default async function Home() {
 
         <Link
           href="/vaccinations"
-          className="block rounded-lg border-2 border-dashed border-primary-500 bg-white p-5 shadow-sm hover:border-primary-600 flex items-center justify-between hover:text-primary-600"
+          className="rounded-lg border-2 border-dashed border-primary-500 bg-white p-5 shadow-sm hover:border-primary-600 flex items-center justify-between hover:text-primary-600"
         >
           <div className="flex-auto">
             <p className="text-sm font-medium">予防接種</p>
@@ -132,7 +132,7 @@ export default async function Home() {
 
         <Link
           href="/daily"
-          className="block rounded-lg border-2 border-dashed border-primary-500 bg-white p-5 shadow-sm hover:border-primary-600 flex items-center justify-between hover:text-primary-600"
+          className="rounded-lg border-2 border-dashed border-primary-500 bg-white p-5 shadow-sm hover:border-primary-600 flex items-center justify-between hover:text-primary-600"
         >
           <div className="flex-auto">
             <p className="text-sm font-medium">日々の記録</p>

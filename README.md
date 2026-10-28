@@ -2,7 +2,7 @@
 
 microCMS をデータストアにした、**個人・家族用の子ども成長記録アプリ**のテンプレートです。
 
-身長・体重・予防接種・日々のできごとを記録し、チャートや一覧で振り返れるようにする、という使い方に振り切っています。**本アプリは表示専用**で、記録の登録・編集は microCMS の管理画面から行います。
+「ブログ・コーポレートサイト」ではなく、**身長・体重・予防接種・日々のできごとを記録し、チャートや一覧で振り返る**という使い方に振り切っています。microCMS の管理画面をそのまま入力 UI として使い、フロントは閲覧に専念する構成です(**本アプリは表示専用**)。
 
 ## 何ができるか
 
@@ -13,6 +13,8 @@ microCMS をデータストアにした、**個人・家族用の子ども成長
 | からだの成長 | 身長・体重の折れ線チャート(公的統計の成長曲線帯つき)と一覧表 |
 | 予防接種 | 標準的な接種時期をもとにした一覧。未接種・予定超過をハイライト |
 | 日々の記録 | できたこと・日記・体調をタイムライン表示。分類で絞り込み可能 |
+
+4つの API が子どもを軸に相互に参照し合い、**1人の子どもの成長・接種・日々の記録をどの画面からでも辿れる**のが特徴です。
 
 ## 技術構成
 
@@ -34,20 +36,21 @@ microCMS をデータストアにした、**個人・家族用の子ども成長
 
 ### 1. microCMS 側の準備
 
-#### 1-1. microCMS で4つの API を作成
+#### 1-1. microCMS でテンプレートから API を生成
 
-新規サービスを作成し、`microcms-schema.md` の定義に沿って以下の4つの API(すべてリスト形式)を作成してください。
+1. [microCMS](https://microcms.io) にログインして、ダッシュボードにアクセス
+2. 新規サービスを作成
+3. **「テンプレート」タブから本テンプレート(子ども成長記録)を選択**して生成
+4. 以下の 4 API が自動生成されます:
 
-| API ID | 名前 | 用途 |
+| API ID | 種類 | 主なフィールド |
 | --- | --- | --- |
-| `children` | 子どもプロフィール | 子どものマスター登録 |
-| `measurements` | からだの成長 | 身長・体重・頭囲 |
-| `vaccinations` | 予防接種の記録 | 予防接種の予定・実績 |
-| `daily` | 日々の記録(やった・できたこと) | できたこと・日記・体調の記録 |
+| `children` | リスト | name, birthday, gender(セレクト), photo, memo |
+| `measurements` | リスト | child(参照), measuredAt, height, weight, headCircumference, note |
+| `vaccinations` | リスト | child(参照), vaccine(セレクト), doseCount, status(真偽値), vaccinatedAt, clinic, reaction, note |
+| `daily` | リスト | child(参照), category(セレクト), note, mood(セレクト), photos, temperature |
 
-このリポジトリの `microcms-template.json` は、上記スキーマをそのままエクスポートしたものです。microCMS管理画面の「API一覧」からインポートできる場合は、この1ファイルで4 API をまとめて再現できます(インポート機能の有無・手順はmicroCMSの最新のドキュメントを確認してください)。
-
-> **注意**: `measurements.weight` の下限値は、管理画面上は `5`(kg)のままになっている場合があります。新生児(出生時平均約3kg)も登録できるよう、`1.0` 程度まで引き下げることを推奨します。
+> テンプレート機能を使わず手動で作成する場合は、リポジトリの [`microcms-template.json`](microcms-template.json)(上記スキーマのエクスポート)を参照して、同じ API ID・フィールド ID・セレクト値で作成してください。`vaccine` / `category` / `mood` / `gender` のセレクト値は [`constants/`](constants/) 配下の定義と一致させる必要があります。
 
 #### 1-2. API キーを取得
 
@@ -59,7 +62,7 @@ microCMS をデータストアにした、**個人・家族用の子ども成長
 #### 2-1. リポジトリをクローン
 
 ```bash
-git clone <このリポジトリのURL>
+git clone https://github.com/daisuke-tsunemi/children-growth.git
 cd children-growth
 npm install
 ```
@@ -75,6 +78,15 @@ BASE_URL=http://localhost:3000  # ローカル開発時は localhost でも可
 BASIC_AUTH_USER=xxxxx           # 任意。画面全体を保護する場合に設定
 BASIC_AUTH_PASSWORD=xxxxx       # 任意。未設定の場合は保護なしで起動します(起動時に警告)
 ```
+
+| 変数名 | 必須 | 説明 |
+| --- | --- | --- |
+| `MICROCMS_SERVICE_DOMAIN` | 必須 | microCMS のサービスID |
+| `MICROCMS_API_KEY` | 必須 | 読み取り用 API キー |
+| `BASE_URL` | 必須 | 公開URL(メタデータの `metadataBase` に使用)。本番ではデプロイ先のURLを設定 |
+| `BASIC_AUTH_USER` / `BASIC_AUTH_PASSWORD` | 任意 | 両方設定した場合のみ Basic 認証を有効化 |
+
+> **API キーの扱い**:`.env.local` は Git でコミットしないでください(`.gitignore` に含まれています)。
 
 子どもの写真・健康情報を扱うアプリのため、**インターネットに公開する場合は `BASIC_AUTH_USER` / `BASIC_AUTH_PASSWORD` の設定を強く推奨**します。
 
@@ -96,7 +108,8 @@ npm run dev
 
 1. GitHub にプッシュ
 2. [Vercel](https://vercel.com) で新規プロジェクトとしてインポート
-3. 環境変数(`MICROCMS_SERVICE_DOMAIN` / `MICROCMS_API_KEY` / `BASE_URL` / `BASIC_AUTH_USER` / `BASIC_AUTH_PASSWORD`)を設定してデプロイ
+3. 環境変数(`MICROCMS_SERVICE_DOMAIN` / `MICROCMS_API_KEY` / `BASE_URL=https://your-domain.vercel.app` / `BASIC_AUTH_USER` / `BASIC_AUTH_PASSWORD`)を設定してデプロイ
+4. デプロイ完了後、発行された URL にアクセスして動作確認
 
 ### 4. 本番ビルド(ローカルで実行する場合)
 
@@ -143,6 +156,34 @@ npm run test         # 単体テスト(lib/age.ts等)
 npm run test:e2e     # Playwright E2E(実際のmicroCMSサービスに接続して実行)
 npm run build        # 本番ビルド
 ```
+
+---
+
+## 以下拡張開発例
+
+テンプレートは「記録を登録して、振り返る」ところまでを実装しています。実運用に乗せるとき、次に必要になりやすいのは以下です。
+
+- **画面からのデータ入力** — microCMS の **Write API** を Server Actions 経由で叩く構成にすると、管理画面を開かずスマホから身長体重を記録できます(現状は書き込み用キーを持たない表示専用)
+- **家族ごとの認証・権限管理** — Basic認証から Auth.js 等への置き換え、祖父母は閲覧のみ・保護者は編集可、といったロール分け
+- **通知・リマインド** — 予防接種の予定月齢が近づいたら Slack / LINE へ通知(microCMS の Webhook + Vercel Cron)
+- **成長曲線の拡充** — 頭囲の曲線、早産児の修正月齢への対応
+- **エクスポート** — 母子手帳アプリ風の PDF 出力、受診時に見せる成長記録の CSV 出力
+- **別用途への転用** — 子ども → ペット・家庭菜園・習い事の生徒、といった「個体ごとの時系列記録」にデータモデルごと流用可能
+
+---
+
+## 開発のご相談
+
+上記のような拡張開発、および **React / Next.js に限らず、Laravel などの PHP フレームワークを使ったサイト・業務システムの開発全般**を承っています。
+
+- テンプレートをベースにした自社向けカスタマイズ
+- 認証・権限管理、入力機能ほか外部サービス連携の追加
+- 既存ワークフローのシステムリニューアル
+- Webサイト制作、業務システム開発、保守運用
+
+**▶ [お問い合わせはこちら(株式会社創新ラボ)](https://soushin-lab.co.jp/contact)**
+
+---
 
 ## ライセンス
 

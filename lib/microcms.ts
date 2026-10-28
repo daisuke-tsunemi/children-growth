@@ -89,18 +89,37 @@ export const getVaccinations = cache(async (childId: string): Promise<Vaccinatio
   return raw.map((item) => vaccinationSchema.parse(item));
 });
 
-/**
- * 指定した子どもの日々の記録(新しい順)。`category`を指定すると絞り込む。
- */
-export const getDaily = cache(async (childId: string, category?: DailyCategory): Promise<Daily[]> => {
-  const filters = category
-    ? `child[equals]${childId}[and]category[equals]${category}`
-    : `child[equals]${childId}`;
+/** 日々の記録の1ページあたりの件数 */
+export const DAILY_PAGE_SIZE = 20;
 
-  const raw = await fetchAllContents('daily', {
-    filters,
-    orders: '-createdAt',
-    depth: 1,
-  });
-  return raw.map((item) => dailySchema.parse(item));
-});
+/**
+ * 指定した子どもの日々の記録(新しい順)を1ページ分取得する。`category`を指定すると絞り込む。
+ * `page`は1始まり。
+ */
+export const getDailyPage = cache(
+  async (
+    childId: string,
+    page: number,
+    category?: DailyCategory,
+  ): Promise<{ records: Daily[]; totalCount: number }> => {
+    const filters = category
+      ? `child[equals]${childId}[and]category[contains]${category}`
+      : `child[equals]${childId}`;
+
+    const res = (await client.get({
+      endpoint: 'daily',
+      queries: {
+        filters,
+        orders: '-createdAt',
+        depth: 1,
+        limit: DAILY_PAGE_SIZE,
+        offset: (page - 1) * DAILY_PAGE_SIZE,
+      },
+    })) as MicroCMSListResponse;
+
+    return {
+      records: res.contents.map((item) => dailySchema.parse(item)),
+      totalCount: res.totalCount,
+    };
+  },
+);

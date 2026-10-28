@@ -17,28 +17,32 @@ export default function DailyTimeline({ records }: Props) {
         const mood = record.mood ? DAILY_MOODS[record.mood] : null;
 
         return (
-          <li key={record.id} className="rounded-lg border-2 border-dashed border-gray-200 bg-white p-5 shadow-sm">
-            <div className="flex flex-wrap items-center gap-2 text-sm text-gray-500">
-              <time dateTime={record.createdAt}>{record.createdAt.slice(0, 16).replace('T', ' ')}</time>
-              <span className="rounded-full bg-primary-500/15 px-2.5 py-0.5 font-semibold text-primary-600">
-                {record.category}
-              </span>
-              {mood && <span className={mood.colorClass}>{mood.emoji}</span>}
-              {record.temperature !== undefined && <span>体温 {record.temperature}℃</span>}
+          <li key={record.id} className="flex flex-wrap gap-2 rounded-lg border-2 border-dashed border-gray-200 bg-white p-5 shadow-sm">
+            <div className='flex-auto'>
+              <div className="flex flex-wrap items-center gap-2 text-sm text-gray-500">
+                <time dateTime={record.createdAt}>{record.createdAt.slice(0, 16).replace('T', ' ')}</time>
+                <span className="rounded-full bg-primary-500/15 px-2.5 py-0.5 font-semibold text-primary-600">
+                  {record.category}
+                </span>
+                {mood && <span className={mood.colorClass}>{mood.emoji}</span>}
+                {record.temperature !== undefined && <span>体温 {record.temperature}℃</span>}
+              </div>
+              <div className='mt-2 p-2 rounded-sm bg-gray-100'>
+                <p className="text-lg whitespace-pre-wrap text-gray-800">{record.note}</p>
+              </div>
             </div>
-            <p className="mt-2 text-sm whitespace-pre-wrap text-gray-800">{record.note}</p>
             {record.photos && record.photos.length > 0 && (
-              <div className="mt-3 flex flex-wrap gap-2">
-                {record.photos.map((photo, index) => (
-                  <Image
-                    key={`${record.id}-${index}`}
-                    src={photo.url}
-                    alt=""
-                    width={96}
-                    height={96}
-                    className="h-24 w-24 rounded-md object-cover"
-                  />
-                ))}
+                <div className='ml-auto flex flex-wrap gap-2 mt-3'>
+                  {record.photos.map((photo, index) => (
+                    <Image
+                      key={`${record.id}-${index}`}
+                      src={photo.url}
+                      alt=""
+                      width={160}
+                      height={120}
+                      className="h-auto rounded-sm"
+                    />
+                  ))}
               </div>
             )}
           </li>

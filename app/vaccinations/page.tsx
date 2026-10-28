@@ -36,7 +36,7 @@ export default async function VaccinationsPage() {
       </div>
       <div className={styles.content}>
         <VaccinationsTable rows={rows} />
-        <p className="rounded-md bg-tertiary-500/15 px-4 py-3 text-sm font-medium text-[#854d0e]">
+        <p className="rounded-md bg-tertiary-500/15 px-4 py-3 text-sm font-medium text-[#854d0e] mt-4">
           「標準的な時期」は厚生労働省の定期接種スケジュールを月齢換算した目安です。<br />実際の接種時期は医療機関・自治体の案内に従ってください。本アプリは記録用であり、医療上の判断を示すものではありません。
         </p>
       </div>
