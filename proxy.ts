@@ -5,8 +5,7 @@ import type { NextRequest } from 'next/server';
  * 全ルートをBasic認証で保護する(子どもの写真・健康情報を扱うため)。
  *
  * `BASIC_AUTH_USER`・`BASIC_AUTH_PASSWORD`の両方が設定されている場合のみ保護を有効にする。
- * テンプレートとして配布する前提のため、未設定でも起動は継続し、保護なしであることを警告する
- * (`詳細設計書`ではなく`CLAUDE.md`「セキュリティ・プライバシー」参照)。
+ * テンプレートとして配布する前提のため、未設定でも起動は継続し、保護なしであることを警告する。
  */
 export function proxy(request: NextRequest) {
   const user = process.env.BASIC_AUTH_USER;

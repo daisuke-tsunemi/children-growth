@@ -7,7 +7,6 @@ import { getGrowthStandards } from '../constants/growth-standards';
 import { formatAge } from '../lib/age';
 import GrowthChart from '../components/charts/GrowthChart';
 import BlockCastle from '../components/illustrations/BlockCastle';
-import styles from "./home.module.scss";
 
 export default async function Home() {
   const { children, selected } = await getSelectedChild();
@@ -81,10 +80,10 @@ export default async function Home() {
           />
         </div>
       </section>
-      <div className={`${styles.linkWrapper} grid gap-4 lg:grid-cols-3`}>
+      <div className="grid gap-4 lg:grid-cols-3">
         <Link
           href="/growth"
-          className="rounded-lg border-2 border-dashed border-primary-500 bg-white p-5 shadow-sm hover:border-primary-600 flex items-center justify-between hover:text-primary-600"
+          className="rounded-lg border-2 border-dashed border-primary-500 bg-white p-5 shadow-sm hover:border-primary-600 flex items-center justify-between hover:text-primary-600 lg:transition-all lg:duration-200 lg:hover:bg-[#e7fcff]"
         >
           <div className="flex-auto">
             <p className="text-sm font-medium">からだの成長</p>
@@ -119,7 +118,7 @@ export default async function Home() {
 
         <Link
           href="/vaccinations"
-          className="rounded-lg border-2 border-dashed border-primary-500 bg-white p-5 shadow-sm hover:border-primary-600 flex items-center justify-between hover:text-primary-600"
+          className="rounded-lg border-2 border-dashed border-primary-500 bg-white p-5 shadow-sm hover:border-primary-600 flex items-center justify-between hover:text-primary-600 lg:transition-all lg:duration-200 lg:hover:bg-[#e7fcff]"
         >
           <div className="flex-auto">
             <p className="text-sm font-medium">予防接種</p>
@@ -132,7 +131,7 @@ export default async function Home() {
 
         <Link
           href="/daily"
-          className="rounded-lg border-2 border-dashed border-primary-500 bg-white p-5 shadow-sm hover:border-primary-600 flex items-center justify-between hover:text-primary-600"
+          className="rounded-lg border-2 border-dashed border-primary-500 bg-white p-5 shadow-sm hover:border-primary-600 flex items-center justify-between hover:text-primary-600 lg:transition-all lg:duration-200 lg:hover:bg-[#e7fcff]"
         >
           <div className="flex-auto">
             <p className="text-sm font-medium">日々の記録</p>

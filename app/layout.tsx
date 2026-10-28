@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import '@/styles/css/addition.css';
 import { nunito, zenMaruGothic } from '../lib/fonts';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
@@ -15,15 +14,10 @@ export const metadata: Metadata = {
     template: `%s | ${SITE_NAME}`,
     default: SITE_NAME,
   },
-  icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon.ico',
-    apple: '/apple-touch-icon.png',
-  },
   description: '子どもの成長記録(身長・体重・予防接種・日々の記録)を管理するアプリです。',
   openGraph: {
     title: {
-      template: '%s | ${SITE_NAME}',
+      template: `%s | ${SITE_NAME}`,
       default: SITE_NAME,
     },
     description:'身長・体重・予防接種・日々の記録',

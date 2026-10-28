@@ -41,7 +41,7 @@ export type Gender = z.infer<typeof genderSchema>;
 
 /**
  * `children`(子どもプロフィール)。
- * `microcms-schema.md` 1.children に対応。
+ * `microcms-template.json` の`children`に対応。
  */
 export const childSchema = microCMSBaseSchema.extend({
   name: z.string().min(1).max(30),
@@ -54,7 +54,7 @@ export type Child = z.infer<typeof childSchema>;
 
 /**
  * `measurements`(からだの成長)。
- * `microcms-schema.md` 2.measurements に対応。
+ * `microcms-template.json` の`measurements`に対応。
  * アプリ検証: height / weight / headCircumference の少なくとも1つは必須。
  * weightの下限は1.0kg(2026-10-01決定。新生児・早産児も登録できるようmicroCMS側の5kgより引き下げる)。
  */
@@ -95,7 +95,7 @@ export type VaccineType = z.infer<typeof vaccineTypeSchema>;
 
 /**
  * `vaccinations`(予防接種の記録)。
- * `microcms-schema.md` 3.vaccinations に対応。
+ * `microcms-template.json` の`vaccinations`に対応。
  * アプリ検証: 接種済(status=true)なら vaccinatedAt が必須。
  */
 export const vaccinationSchema = microCMSBaseSchema
@@ -129,7 +129,7 @@ export type DailyMood = z.infer<typeof dailyMoodSchema>;
 
 /**
  * `daily`(日々の記録)。
- * `microcms-schema.md` 4.daily に対応。日付フィールドを持たず、記録日は`createdAt`を使う。
+ * `microcms-template.json` の`daily`に対応。日付フィールドを持たず、記録日は`createdAt`を使う。
  */
 export const dailySchema = microCMSBaseSchema.extend({
   child: childSchema,

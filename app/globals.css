@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 @theme {
-  --font-heading: var(--font-patrick-hand), var(--font-zen-maru), 'Hiragino Sans', sans-serif;
+  --font-heading: var(--font-zen-maru), 'Hiragino Sans', sans-serif;
   --font-sans: var(--font-nunito), var(--font-zen-maru), 'Hiragino Sans', sans-serif;
 
   --color-primary-500: #60a5fa;
@@ -22,4 +22,45 @@
   --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.06);
   --shadow-md: 0 3px 8px 0 rgb(0 0 0 / 0.08);
   --shadow-lg: 0 6px 16px 0 rgb(0 0 0 / 0.1);
+}
+
+@layer base {
+  ::selection {
+    background-color: var(--color-primary-600);
+    color: white;
+  }
+
+  ::-webkit-scrollbar {
+    background-color: #ddd;
+    border-radius: 2px;
+    height: 5px;
+    width: 5px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: black;
+    border-radius: 2px;
+  }
+
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+
+  /* 子どもの切り替えセレクトのプルダウン矢印 */
+  select {
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6L8 10L12 6" stroke="%23b8c2df" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+    background-position: right 0.75rem center;
+    background-repeat: no-repeat;
+    background-size: 0.75rem;
+  }
+
+  /* ページ番号入力のスピンボタンを消す */
+  input[type='number'] {
+    appearance: textfield;
+  }
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button {
+    appearance: none;
+    margin: 0;
+  }
 }

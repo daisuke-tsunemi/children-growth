@@ -17,7 +17,7 @@ export type VaccinationRow = {
 
 /**
  * 同一ワクチン×回数の重複記録を1件に畳む(更新日が新しいものを優先する)。
- * `microcms-schema.md`「1子ども×vaccine×doseCountにつき1レコード(アプリ側で重複防止)」に対応。
+ * microCMS側では一意制約を持てないため、「1子ども×vaccine×doseCountにつき1レコード」をアプリ側で担保する。
  */
 function dedupeByVaccineAndDose(vaccinations: Vaccination[]): Map<string, Vaccination> {
   const map = new Map<string, Vaccination>();

@@ -29,14 +29,14 @@ test('calculateAgeInYears: 24か月は満2歳', () => {
   assert.equal(calculateAgeInYears('2022-01-15', new Date('2024-01-20T12:00:00Z')), 2);
 });
 
-test('formatAge: 1歳未満は「◯か月」', () => {
-  assert.equal(formatAge('2024-01-15', new Date('2024-06-15T12:00:00Z')), '5か月');
+test('formatAge: 1歳未満は「◯ヶ月」', () => {
+  assert.equal(formatAge('2024-01-15', new Date('2024-06-15T12:00:00Z')), '5ヶ月');
 });
 
 test('formatAge: ちょうど◯歳は「◯歳」のみ', () => {
   assert.equal(formatAge('2022-01-15', new Date('2024-01-15T12:00:00Z')), '2歳');
 });
 
-test('formatAge: 端数月があれば「◯歳◯か月」', () => {
-  assert.equal(formatAge('2022-01-15', new Date('2024-04-20T12:00:00Z')), '2歳3か月');
+test('formatAge: 端数月があれば「◯歳◯ヶ月」', () => {
+  assert.equal(formatAge('2022-01-15', new Date('2024-04-20T12:00:00Z')), '2歳3ヶ月');
 });

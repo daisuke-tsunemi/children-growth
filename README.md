@@ -16,22 +16,27 @@ microCMS をデータストアにした、**個人・家族用の子ども成長
 
 4つの API が子どもを軸に相互に参照し合い、**1人の子どもの成長・接種・日々の記録をどの画面からでも辿れる**のが特徴です。
 
+> [!IMPORTANT]
+> 子どもの写真・健康情報を扱うアプリです。**ローカル以外で利用する(Vercel 等へデプロイする)場合は、必ず Basic 認証(`BASIC_AUTH_USER` / `BASIC_AUTH_PASSWORD`)を設定してください。** 未設定のままデプロイすると、URL を知っている誰でも閲覧できる状態になります。設定方法は [2-2. 環境変数を設定](#2-2-環境変数を設定) を参照してください。
+
 ## 技術構成
 
 - **Next.js 16**(App Router / Server Components)
 - **React 19** / **TypeScript 5**(strict)
-- **Tailwind CSS 4**
+- **Tailwind CSS 4**(スタイルの基本。テーマは `app/globals.css` の `@theme`)
+- **Sass(CSS Modules)**(レイアウトなど一部の `*.module.scss` のみ)
 - **Zod**(microCMSから取得したデータの検証)
 - **Recharts**(成長チャート)
 - **microcms-js-sdk**
-- Basic認証によるアクセス制限(`proxy.ts`)
+- Basic認証によるアクセス制限(`proxy.ts`。環境変数を設定した場合のみ有効)
+- テスト: **Node.js 標準のテストランナー**(単体テスト) / **Playwright**(E2E)
 - ホスティング: **Vercel**
 
 ## セットアップ
 
 ### 前提条件
 
-- **Node.js 20 以上** / **npm 9 以上**
+- **Node.js 22.6 以上** / **npm 10 以上**(単体テストで Node.js の `--experimental-strip-types` を使うため)
 - **microCMS アカウント**(無料プランで利用可能)
 
 ### 1. microCMS 側の準備
@@ -75,8 +80,8 @@ npm install
 MICROCMS_SERVICE_DOMAIN=xxxxx   # https://xxxxx.microcms.io の xxxxx
 MICROCMS_API_KEY=xxxxxxxxxx     # microCMS の API キー(読み取り用。1-2 で取得)
 BASE_URL=http://localhost:3000  # ローカル開発時は localhost でも可
-BASIC_AUTH_USER=xxxxx           # 任意。画面全体を保護する場合に設定
-BASIC_AUTH_PASSWORD=xxxxx       # 任意。未設定の場合は保護なしで起動します(起動時に警告)
+BASIC_AUTH_USER=xxxxx           # デプロイして利用する場合は必ず設定
+BASIC_AUTH_PASSWORD=xxxxx       # 未設定の場合は保護なしで起動します(起動時に警告)
 ```
 
 | 変数名 | 必須 | 説明 |
@@ -84,11 +89,12 @@ BASIC_AUTH_PASSWORD=xxxxx       # 任意。未設定の場合は保護なしで�
 | `MICROCMS_SERVICE_DOMAIN` | 必須 | microCMS のサービスID |
 | `MICROCMS_API_KEY` | 必須 | 読み取り用 API キー |
 | `BASE_URL` | 必須 | 公開URL(メタデータの `metadataBase` に使用)。本番ではデプロイ先のURLを設定 |
-| `BASIC_AUTH_USER` / `BASIC_AUTH_PASSWORD` | 任意 | 両方設定した場合のみ Basic 認証を有効化 |
+| `BASIC_AUTH_USER` / `BASIC_AUTH_PASSWORD` | デプロイ時は必須 | 両方設定した場合のみ Basic 認証を有効化。ローカル開発では未設定でも可 |
 
 > **API キーの扱い**:`.env.local` は Git でコミットしないでください(`.gitignore` に含まれています)。
 
-子どもの写真・健康情報を扱うアプリのため、**インターネットに公開する場合は `BASIC_AUTH_USER` / `BASIC_AUTH_PASSWORD` の設定を強く推奨**します。
+> [!WARNING]
+> Basic 認証は**両方の変数が設定されているときだけ**有効になります。未設定でもアプリは起動します(サーバーログに警告が出ます)が、その状態で公開すると子どもの写真・健康情報を誰でも閲覧できてしまいます。**ローカル以外で利用する場合は必ず設定してください。**
 
 #### 2-3. ローカルで起動して動作確認
 
@@ -108,8 +114,11 @@ npm run dev
 
 1. GitHub にプッシュ
 2. [Vercel](https://vercel.com) で新規プロジェクトとしてインポート
-3. 環境変数(`MICROCMS_SERVICE_DOMAIN` / `MICROCMS_API_KEY` / `BASE_URL=https://your-domain.vercel.app` / `BASIC_AUTH_USER` / `BASIC_AUTH_PASSWORD`)を設定してデプロイ
-4. デプロイ完了後、発行された URL にアクセスして動作確認
+3. 環境変数を設定してデプロイ
+   - `MICROCMS_SERVICE_DOMAIN` / `MICROCMS_API_KEY`
+   - `BASE_URL=https://your-domain.vercel.app`(デプロイ先の URL)
+   - **`BASIC_AUTH_USER` / `BASIC_AUTH_PASSWORD`(必ず設定してください)**
+4. デプロイ完了後、発行された URL にアクセスし、**Basic 認証のダイアログが表示されること**と各画面の表示を確認
 
 ### 4. 本番ビルド(ローカルで実行する場合)
 
@@ -118,16 +127,27 @@ npm run build
 npm run start
 ```
 
-### 5. CI(GitHub Actions)
+### 5. テスト
 
-`.github/workflows/ci.yml` は push・pull request のたびに lint / typecheck / 単体テスト / build / Playwright E2E を実行する。E2Eはモックを使わず実際のmicroCMSサービスに接続するため、リポジトリの Settings → Secrets and variables → Actions で以下を登録すること。
+#### 単体テスト
 
-| Secret名 | 用途 |
-| --- | --- |
-| `MICROCMS_API_KEY` | 読み取り用APIキー |
-| `MICROCMS_SERVICE_DOMAIN` | サービスID |
+```bash
+npm run test
+```
 
-E2Eは `children` に本テンプレートのサンプルデータ(山田太郎・山田花子)が登録済みで、`measurements`・`vaccinations`・`daily` が未登録(0件)の状態を前提にしている。サンプルデータを変更・削除する場合は `e2e/*.spec.ts` も合わせて見直すこと。
+`lib/**/*.test.ts` を Node.js 標準のテストランナーで実行します(月齢・年齢計算など)。microCMS への接続は不要です。
+
+#### E2E テスト(Playwright)
+
+E2E はモックを使わず、**`.env.local` に設定した実際の microCMS サービスに接続して**実行します。
+
+```bash
+npx playwright install chromium   # 初回のみ。ブラウザをインストール
+npm run test:e2e
+```
+
+- テスト実行時は `playwright.config.ts` が開発サーバー(`npm run dev`)を自動で起動します。Basic 認証はテスト中のみ自動で無効化されます
+- `children` に本テンプレートのサンプルデータ(山田 太郎・山田 花子)が登録済みで、`measurements`・`vaccinations`・`daily` が未登録(0件)の状態を前提にしています。データを登録・変更した場合は `e2e/*.spec.ts` も合わせて見直してください
 
 ## カスタマイズの入口
 
@@ -137,11 +157,15 @@ E2Eは `children` に本テンプレートのサンプルデータ(山田太郎�
 | 成長曲線の基準値を差し替える | [`constants/growth-standards.ts`](constants/growth-standards.ts)(出典: こども家庭庁「令和5年乳幼児身体発育調査」) |
 | 日々の記録の分類・ごきげんの選択肢 | [`constants/daily.ts`](constants/daily.ts)(microCMSのセレクト値と一致させること) |
 | サイト名 | [`lib/config.ts`](lib/config.ts) の `SITE_NAME` |
-| 配色 | [`app/globals.css`](app/globals.css) の `@theme`(Tailwind CSS 4のCSSファースト設定) |
+| 配色・角丸・影 | [`app/globals.css`](app/globals.css) の `@theme`(Tailwind CSS 4のCSSファースト設定) |
+| フォント | [`lib/fonts.ts`](lib/fonts.ts)(本文: Nunito / 見出し・日本語: Zen Maru Gothic) |
+| Basic認証の対象パス | [`proxy.ts`](proxy.ts) の `matcher` |
 
 ## 設計上のポイント
 
 - **表示専用**。登録・編集は microCMS の管理画面で行う前提のため、書き込み用APIキー・Server Actionsを持たない
+- **Basic認証は環境変数で有効化**([`proxy.ts`](proxy.ts))。テンプレートとしてすぐ起動できるよう未設定でも動くが、デプロイして利用する場合は必ず設定する
+- **検索エンジンにインデックスさせない**。個人の記録用のため、メタデータで `noindex, nofollow` を指定している
 - **月齢・年齢の計算はタイムゾーンに注意**([`lib/age.ts`](lib/age.ts))。誕生日は暦日として扱い、「今日」の判定のみ Asia/Tokyo 基準にしている
 - **予防接種の「予定超過」判定は目安**。[`constants/vaccines.ts`](constants/vaccines.ts) に基づく簡易計算であり、医療上の判断を示すものではない(画面にも注意書きを表示)
 - **成長曲線はp3/p50/p97の帯表示**。性別が未設定の子どもには表示しない
@@ -149,10 +173,10 @@ E2Eは `children` に本テンプレートのサンプルデータ(山田太郎�
 ## 開発コマンド
 
 ```bash
-npm run dev        # 開発サーバー
-npm run lint        # ESLint
+npm run dev          # 開発サーバー
+npm run lint         # ESLint
 npm run typecheck    # 型チェック
-npm run test         # 単体テスト(lib/age.ts等)
+npm run test         # 単体テスト(lib/**/*.test.ts)
 npm run test:e2e     # Playwright E2E(実際のmicroCMSサービスに接続して実行)
 npm run build        # 本番ビルド
 ```
@@ -165,6 +189,7 @@ npm run build        # 本番ビルド
 
 - **画面からのデータ入力** — microCMS の **Write API** を Server Actions 経由で叩く構成にすると、管理画面を開かずスマホから身長体重を記録できます(現状は書き込み用キーを持たない表示専用)
 - **家族ごとの認証・権限管理** — Basic認証から Auth.js 等への置き換え、祖父母は閲覧のみ・保護者は編集可、といったロール分け
+- **CI** — GitHub Actions で lint / typecheck / テスト / build を push のたびに自動実行(E2E を含める場合は microCMS の API キーを Secrets に登録)
 - **通知・リマインド** — 予防接種の予定月齢が近づいたら Slack / LINE へ通知(microCMS の Webhook + Vercel Cron)
 - **成長曲線の拡充** — 頭囲の曲線、早産児の修正月齢への対応
 - **エクスポート** — 母子手帳アプリ風の PDF 出力、受診時に見せる成長記録の CSV 出力
