@@ -40,3 +40,9 @@ test('formatAge: ちょうど◯歳は「◯歳」のみ', () => {
 test('formatAge: 端数月があれば「◯歳◯ヶ月」', () => {
   assert.equal(formatAge('2022-01-15', new Date('2024-04-20T12:00:00Z')), '2歳3ヶ月');
 });
+
+test('calculateAgeInMonths: 誕生日が日本時間0時(UTCでは前日15時)で返っても日本時間の暦日で数える', () => {
+  // 2024-01-15生まれ。UTCの日付(1/14)で数えると2/14に満1か月になってしまう
+  assert.equal(calculateAgeInMonths('2024-01-14T15:00:00.000Z', new Date('2024-02-14T12:00:00Z')), 0);
+  assert.equal(calculateAgeInMonths('2024-01-14T15:00:00.000Z', new Date('2024-02-15T12:00:00Z')), 1);
+});

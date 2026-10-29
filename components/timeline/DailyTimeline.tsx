@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import type { Daily } from '../../types';
 import { DAILY_MOODS } from '../../constants/daily';
+import { formatDateTime } from '../../lib/date';
 
 type Props = {
   records: Daily[];
@@ -20,7 +21,7 @@ export default function DailyTimeline({ records }: Props) {
           <li key={record.id} className="flex flex-wrap gap-2 rounded-lg border-2 border-dashed border-gray-200 bg-white p-5 shadow-sm">
             <div className='flex-auto'>
               <div className="flex flex-wrap items-center gap-2 text-sm text-gray-500">
-                <time dateTime={record.createdAt}>{record.createdAt.slice(0, 16).replace('T', ' ')}</time>
+                <time dateTime={record.createdAt}>{formatDateTime(record.createdAt)}</time>
                 <span className="rounded-full bg-primary-500/15 px-2.5 py-0.5 font-semibold text-primary-600">
                   {record.category}
                 </span>

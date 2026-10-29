@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import { getChildren } from '../../lib/microcms';
 import { formatAge } from '../../lib/age';
+import { formatDate } from '../../lib/date';
 import BlockCastle from '@/components/illustrations/BlockCastle';
 import styles from "../pages.module.scss";
 
@@ -62,7 +63,7 @@ export default async function ChildrenPage() {
                   )}
                 </div>
                 <p className="text-sm text-gray-500">
-                  {child.birthday} 生まれ({formatAge(child.birthday)})
+                  {formatDate(child.birthday)} 生まれ({formatAge(child.birthday)})
                 </p>
                 {child.memo && <p className="mt-2 text-sm text-gray-600">{child.memo}</p>}
               </div>

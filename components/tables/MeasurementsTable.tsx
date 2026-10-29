@@ -1,4 +1,5 @@
 import type { Measurement } from '../../types';
+import { formatDate } from '../../lib/date';
 
 type Props = {
   measurements: Measurement[];
@@ -28,7 +29,7 @@ export default function MeasurementsTable({ measurements }: Props) {
         <tbody>
           {measurements.map((measurement) => (
             <tr key={measurement.id} className="border-b border-gray-200 last:border-0">
-              <td className="px-3 py-2 whitespace-nowrap">{measurement.measuredAt.slice(0, 10)}</td>
+              <td className="px-3 py-2 whitespace-nowrap">{formatDate(measurement.measuredAt)}</td>
               <td className="px-3 py-2">{measurement.height ?? '—'}</td>
               <td className="px-3 py-2">{measurement.weight ?? '—'}</td>
               <td className="px-3 py-2">{measurement.headCircumference ?? '—'}</td>

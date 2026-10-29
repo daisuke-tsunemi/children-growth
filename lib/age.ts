@@ -1,39 +1,18 @@
 /**
  * 誕生日からの月齢・年齢を計算する純関数群。
  *
- * 誕生日(`YYYY-MM-DD`または先頭がそれに一致するISO文字列)は暦日そのものとして扱い、
- * タイムゾーン変換を行わない(日付型フィールドにTZ変換をかけるとズレるため)。
- * 「今日」の判定だけはサーバーのTZがUTCでもズレないよう、Asia/Tokyoの暦日を使う。
+ * 誕生日・基準日はどちらも日本時間(Asia/Tokyo)の暦日に揃えてから比較する
+ * (microCMSの日付はUTCで返るため。詳細は`lib/date.ts`)。
  */
 
-type DateParts = { year: number; month: number; day: number };
-
-function parseDateOnly(value: string): DateParts {
-  const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (!match) {
-    throw new Error(`不正な日付形式です: ${value}`);
-  }
-  return { year: Number(match[1]), month: Number(match[2]), day: Number(match[3]) };
-}
-
-function tokyoDateParts(date: Date): DateParts {
-  const formatter = new Intl.DateTimeFormat('en-US', {
-    timeZone: 'Asia/Tokyo',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  });
-  const parts = formatter.formatToParts(date);
-  const get = (type: string) => Number(parts.find((p) => p.type === type)?.value ?? NaN);
-  return { year: get('year'), month: get('month'), day: get('day') };
-}
+import { parseTokyoDate, tokyoDateParts } from './date.ts';
 
 /**
  * 誕生日から基準日時点の月齢(生後何ヶ月か)を返す。日またぎの端数は切り捨てる
  * (例: 生後1ヶ月と20日 → 1)。
  */
 export function calculateAgeInMonths(birthday: string, asOf: Date = new Date()): number {
-  const birth = parseDateOnly(birthday);
+  const birth = parseTokyoDate(birthday);
   const today = tokyoDateParts(asOf);
 
   let months = (today.year - birth.year) * 12 + (today.month - birth.month);

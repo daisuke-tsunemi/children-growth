@@ -5,6 +5,7 @@ import { getMeasurements, getVaccinations, getDailyPage } from '../lib/microcms'
 import { buildVaccinationSchedule } from '../lib/vaccinations';
 import { getGrowthStandards } from '../constants/growth-standards';
 import { formatAge } from '../lib/age';
+import { formatDate } from '../lib/date';
 import GrowthChart from '../components/charts/GrowthChart';
 import BlockCastle from '../components/illustrations/BlockCastle';
 
@@ -110,7 +111,7 @@ export default async function Home() {
               <p className="mt-2 text-sm text-gray-400">まだ記録がありません</p>
             )}
             {latestMeasurement && (
-              <p className="mt-1 text-sm text-gray-400">{latestMeasurement.measuredAt.slice(0, 10)}</p>
+              <p className="mt-1 text-sm text-gray-400">{formatDate(latestMeasurement.measuredAt)}</p>
             )}
           </div>
           <svg className="aspect-square size-1/4"><use href="#arrow_right" /></svg>
@@ -138,7 +139,7 @@ export default async function Home() {
             {latestDaily ? (
               <>
                 <p className="mt-2 line-clamp-2 text-sm text-gray-800">{latestDaily.note}</p>
-                <p className="mt-1 text-sm text-gray-400">{latestDaily.createdAt.slice(0, 10)}</p>
+                <p className="mt-1 text-sm text-gray-400">{formatDate(latestDaily.createdAt)}</p>
               </>
             ) : (
               <p className="mt-2 text-sm text-gray-400">まだ記録がありません</p>
