@@ -14,12 +14,18 @@ export const metadata: Metadata = {
     template: `%s | ${SITE_NAME}`,
     default: SITE_NAME,
   },
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+  },
+
   description: '子どもの成長記録(身長・体重・予防接種・日々の記録)を管理するアプリです。',
   openGraph: {
     title: {
       template: `%s | ${SITE_NAME}`,
       default: SITE_NAME,
     },
+    images: '/ogp.jpg',
     description:'身長・体重・予防接種・日々の記録',
     type: 'website',
     url: '/',
