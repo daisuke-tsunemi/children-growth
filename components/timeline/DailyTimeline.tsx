@@ -1,7 +1,7 @@
-import Image from 'next/image';
 import type { Daily } from '../../types';
 import { DAILY_MOODS } from '../../constants/daily';
 import { formatDateTime } from '../../lib/date';
+import PhotoGallery from './PhotoGallery';
 
 type Props = {
   records: Daily[];
@@ -34,16 +34,7 @@ export default function DailyTimeline({ records }: Props) {
             </div>
             {record.photos && record.photos.length > 0 && (
                 <div className='ml-auto flex flex-wrap gap-2 mt-3'>
-                  {record.photos.map((photo, index) => (
-                    <Image
-                      key={`${record.id}-${index}`}
-                      src={photo.url}
-                      alt=""
-                      width={160}
-                      height={120}
-                      className="h-auto rounded-sm"
-                    />
-                  ))}
+                  <PhotoGallery photos={record.photos} />
               </div>
             )}
           </li>
