@@ -30,7 +30,7 @@ export default async function ChildrenPage() {
         <BlockCastle />
       </div>
       <div className={styles.heading}>
-        <h1 className="font-heading text-[32px] leading-[1.2] text-primary-600">登録済みの子ども</h1>
+        <h1 className="font-heading text-[28px] leading-[1.2] text-blue-900 font-bold">登録済みの子ども</h1>
       </div>
       <div className={styles.content}>
         <ul className="grid gap-4">

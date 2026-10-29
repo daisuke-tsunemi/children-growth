@@ -16,7 +16,7 @@ export default function MeasurementsTable({ measurements }: Props) {
   return (
     <div className="overflow-x-auto rounded-lg border-2 border-dashed border-gray-200 bg-white">
       <table className="w-full min-w-[480px] text-sm">
-        <thead className="border-b-2 border-dashed border-gray-200 bg-surface text-left text-gray-500">
+        <thead className="border-b-2 border-dashed border-gray-300 bg-surface text-left text-gray-500">
           <tr>
             <th className="px-3 py-2 font-semibold">測定日</th>
             <th className="px-3 py-2 font-semibold">身長(cm)</th>
@@ -27,7 +27,7 @@ export default function MeasurementsTable({ measurements }: Props) {
         </thead>
         <tbody>
           {measurements.map((measurement) => (
-            <tr key={measurement.id} className="border-b border-dashed border-gray-100 last:border-0">
+            <tr key={measurement.id} className="border-b border-gray-200 last:border-0">
               <td className="px-3 py-2 whitespace-nowrap">{measurement.measuredAt.slice(0, 10)}</td>
               <td className="px-3 py-2">{measurement.height ?? '—'}</td>
               <td className="px-3 py-2">{measurement.weight ?? '—'}</td>

@@ -42,7 +42,7 @@ export default async function DailyPage({ searchParams }: Props) {
       </div>
       <div className="max-w-4xl mx-auto space-y-6">
         <div className={`${styles.heading}`}>
-          <h1 className="font-heading text-[32px] leading-[1.2] text-primary-600">日々の記録</h1>
+          <h1 className="font-heading text-[28px] leading-[1.2] text-blue-900 font-bold">日々の記録</h1>
         </div>
         <div className={`${styles.content} space-y-6`}>
           <div className={`flex flex-wrap gap-2 text-sm`}>

@@ -25,28 +25,31 @@ export default function VaccinationsTable({ rows }: Props) {
   return (
     <div className="overflow-x-auto rounded-lg border-2 border-dashed border-gray-200 bg-white">
       <table className="w-full min-w-[640px] text-sm">
-        <thead className="border-b-2 border-dashed border-gray-200 bg-surface text-left text-gray-500">
+        <thead className="border-b-2 border-dashed border-gray-300 bg-surface text-left text-gray-500">
           <tr>
-            <th className="px-3 py-2 font-semibold">状態</th>
-            <th className="px-3 py-2 font-semibold w-32">回数 / 接種日</th>
-            <th className="px-3 py-2 font-semibold w-32">医療機関</th>
-            <th className="px-3 py-2 font-semibold">種類 / 標準的な時期</th>
+            <th className="px-3 py-2 font-semibold">回数 / 状態</th>
+            <th className="px-3 py-2 font-semibold w-38">医療機関 / 接種日</th>
+            <th className="px-3 py-2 font-semibold">種類</th>
+            <th className="px-3 py-2 font-semibold">標準的な時期</th>
           </tr>
         </thead>
         <tbody>
           {sorted.map((row) => {
             const status = STATUS_LABEL[row.status];
             return (
-              <tr key={`${row.vaccine}:${row.doseCount}`} className="border-b border-dashed border-gray-100 last:border-0">
-                <td className="px-3 py-2">
+              <tr key={`${row.vaccine}:${row.doseCount}`} className="border-b border-gray-200 last:border-0">
+                <td className="px-3 py-2 text-center">
+                  {row.doseCount}回目<br /> 
                   <span className={`rounded-full px-2.5 py-0.5 text-sm font-semibold whitespace-nowrap ${status.className}`}>
                     {status.label}
                   </span>
                 </td>
-                <td className="px-3 py-2 whitespace-nowrap">{row.doseCount}回目 <br /> {row.record?.vaccinatedAt?.slice(0, 10) ?? '—'}</td>
-                <td className="px-3 py-2 text-gray-500">{row.record?.clinic ?? ''}</td>
+                <td className="px-3 py-2 text-gray-500">{row.record?.clinic ?? ''}
+                  <br /> {row.record?.vaccinatedAt?.slice(0, 10) ?? '—'}
+                </td>
                 <td className="px-3 py-2">{row.vaccine} <br />
-                  {row.fromMonths !== null && row.toMonths !== null
+                </td>
+                <td className="px-3 py-2 whitespace-nowrap">{row.fromMonths !== null && row.toMonths !== null
                     ? `${formatMonthsAsAge(row.fromMonths)}〜${formatMonthsAsAge(row.toMonths)}`
                     : '—'}
                 </td>
