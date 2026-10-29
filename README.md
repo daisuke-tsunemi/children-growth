@@ -82,6 +82,7 @@ MICROCMS_API_KEY=xxxxxxxxxx     # microCMS の API キー(読み取り用。1-2 
 BASE_URL=http://localhost:3000  # ローカル開発時は localhost でも可
 BASIC_AUTH_USER=xxxxx           # デプロイして利用する場合は必ず設定
 BASIC_AUTH_PASSWORD=xxxxx       # 未設定の場合は保護なしで起動します(起動時に警告)
+ALLOWED_DEV_ORIGINS=192.168.1.10 # 任意。スマホから開発サーバーを確認する場合のPCのIPアドレス
 ```
 
 | 変数名 | 必須 | 説明 |
@@ -90,6 +91,7 @@ BASIC_AUTH_PASSWORD=xxxxx       # 未設定の場合は保護なしで起動し�
 | `MICROCMS_API_KEY` | 必須 | 読み取り用 API キー |
 | `BASE_URL` | 必須 | 公開URL(メタデータの `metadataBase` に使用)。本番ではデプロイ先のURLを設定 |
 | `BASIC_AUTH_USER` / `BASIC_AUTH_PASSWORD` | デプロイ時は必須 | 両方設定した場合のみ Basic 認証を有効化。ローカル開発では未設定でも可 |
+| `ALLOWED_DEV_ORIGINS` | 任意 | 開発サーバー(`npm run dev`)に localhost 以外のホスト名でアクセスする場合に許可するホスト名(カンマ区切り)。本番には影響しない |
 
 > **API キーの扱い**:`.env.local` は Git でコミットしないでください(`.gitignore` に含まれています)。
 
@@ -109,6 +111,16 @@ npm run dev
 - **予防接種**: 標準スケジュールに基づく一覧(未登録でも全件「予定超過」等で表示される)
 
 > microCMS にまだデータがない場合、各画面は空の状態で表示されます。[microCMS の管理画面](https://app.microcms.io)から「子どもプロフィール」を1件登録してください。
+
+#### スマホ実機で開発サーバーを確認する場合
+
+同じ Wi-Fi のスマホから `http://<PCのIPアドレス>:3000` で開く場合は、`.env.local` にその IP アドレスを設定してから `npm run dev` を起動し直してください。
+
+```bash
+ALLOWED_DEV_ORIGINS=192.168.1.10
+```
+
+> 未設定のままだと、Next.js が別ホストからの開発用リソースへの接続を遮断するため、画面は表示されてもチャートが空白のまま・タブや子どもの切り替えが反応しない状態になります。Vercel 等へデプロイした本番環境では不要です。
 
 ### 3. 本番環境へのデプロイ(Vercel)
 
