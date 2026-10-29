@@ -44,10 +44,12 @@ export default function VaccinationsTable({ rows }: Props) {
                     {status.label}
                   </span>
                 </td>
-                <td className="px-3 py-2 text-gray-500">{row.record?.clinic ?? ''}
+                <td className="px-3 py-2 text-gray-500">
+                  {row.record?.clinic ?? ''}
                   <br /> {row.record?.vaccinatedAt?.slice(0, 10) ?? '—'}
                 </td>
-                <td className="px-3 py-2">{row.vaccine} <br />
+                <td className="px-3 py-2">
+                  {row.vaccine}
                 </td>
                 <td className="px-3 py-2 whitespace-nowrap">{row.fromMonths !== null && row.toMonths !== null
                     ? `${formatMonthsAsAge(row.fromMonths)}〜${formatMonthsAsAge(row.toMonths)}`
