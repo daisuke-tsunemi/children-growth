@@ -29,7 +29,7 @@ export default async function VaccinationsPage() {
         <BlockCastle />
       </div>
       <div className={`${styles.heading} flex items-end gap-8 flex-wrap`}>
-        <h1 className="font-heading text-[28px] leading-[1.2] text-blue-900 font-bold">予防接種</h1>
+        <h1 className="font-heading text-[28px] leading-[1.2] text-primary-700 font-bold">予防接種</h1>
         <p className="text-lg text-gray-500">
           {selected.name}<small>（{formatAge(selected.birthday)}）</small>
         </p>
